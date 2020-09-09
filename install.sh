@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
-mkdir -p /srv/docker/registry-web && chmod -Rf 777 /srv/docker/registry-web
+APPNAME="registry-web"
+DATADIR="/srv/docker/$APPNAME"
 
+mkdir -p "$DATADIR" && chmod -Rf 777 "$DATADIR"
+
+if docker ps -a | grep "$APPNAME" >/dev/null 2>&1; then
+docker pull konradkleine/docker-registry-frontend:v2 && docker restart $APPNAME
+else
 docker run --name registry-web \
 -d --restart=always \
 -e ENV_DOCKER_REGISTRY_HOST=registry \
@@ -13,9 +19,10 @@ docker run --name registry-web \
 -e ENV_DEFAULT_TAGS_PER_PAGE=20 \
 -e ENV_DOCKER_REGISTRY_USE_SSL=1 \
 -e ENV_USE_SSL=1 \
--v /srv/docker/registry-web:/var/lib/registry \
+-v $DATADIR:/var/lib/registry \
 -v /etc/ssl/CA/CasjaysDev/certs/localhost.crt:/etc/apache2/server.crt:ro \
 -v /etc/ssl/CA/CasjaysDev/private/localhost.key:/etc/apache2/server.key:ro \
 -p 7080:80 \
 -p 7081:443 \
 konradkleine/docker-registry-frontend:v2
+fi
