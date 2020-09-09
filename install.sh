@@ -6,13 +6,14 @@ DATADIR="/srv/docker/$APPNAME"
 mkdir -p "$DATADIR" && chmod -Rf 777 "$DATADIR"
 
 if docker ps -a | grep "$APPNAME" >/dev/null 2>&1; then
-docker pull konradkleine/docker-registry-frontend:v2 && docker restart $APPNAME
-else
+docker rm -f "$APPNAME"
+docker pull konradkleine/docker-registry-frontend:v2
+fi
 docker run --name "$APPNAME" \
 -d --restart=always \
--e ENV_DOCKER_REGISTRY_HOST=registry \
+-e ENV_DOCKER_REGISTRY_HOST=localhost \
 -e ENV_DOCKER_REGISTRY_PORT=5000 \
--e ENV_REGISTRY_PROXY_FQDN=registry \
+-e ENV_REGISTRY_PROXY_FQDN=localhost \
 -e ENV_REGISTRY_PROXY_PORT=443 \
 -e ENV_DEFAULT_REPOSITORIES_PER_PAGE=50 \
 -e ENV_MODE_BROWSE_ONLY=false \
@@ -25,4 +26,3 @@ docker run --name "$APPNAME" \
 -p 7080:80 \
 -p 7081:443 \
 konradkleine/docker-registry-frontend:v2
-fi
