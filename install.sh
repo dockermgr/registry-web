@@ -4,9 +4,9 @@ mkdir -p /srv/docker/registry-web && chmod -Rf 777 /srv/docker/registry-web
 
 docker run --name registry-web \
 -d --restart=always \
--e ENV_DOCKER_REGISTRY_HOST=$HOSTNAME \
+-e ENV_DOCKER_REGISTRY_HOST=registry \
 -e ENV_DOCKER_REGISTRY_PORT=5000 \
--e ENV_REGISTRY_PROXY_FQDN=$HOSTNAME \
+-e ENV_REGISTRY_PROXY_FQDN=registry \
 -e ENV_REGISTRY_PROXY_PORT=443 \
 -e ENV_DEFAULT_REPOSITORIES_PER_PAGE=50 \
 -e ENV_MODE_BROWSE_ONLY=false \
