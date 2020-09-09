@@ -8,7 +8,7 @@ mkdir -p "$DATADIR" && chmod -Rf 777 "$DATADIR"
 if docker ps -a | grep "$APPNAME" >/dev/null 2>&1; then
 docker pull konradkleine/docker-registry-frontend:v2 && docker restart $APPNAME
 else
-docker run --name registry-web \
+docker run --name "$APPNAME" \
 -d --restart=always \
 -e ENV_DOCKER_REGISTRY_HOST=registry \
 -e ENV_DOCKER_REGISTRY_PORT=5000 \
