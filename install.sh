@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
 APPNAME="registry-web"
+DOCKER_HUB_URL="konradkleine/docker-registry-frontend:v2"
 
-mkdir -p "$DATADIR" && chmod -Rf 777 "$DATADIR"
+sudo mkdir -p "$DATADIR"
+sudo chmod -Rf 777 "$DATADIR"
 
 if docker ps -a | grep "$APPNAME" >/dev/null 2>&1; then
-  docker rm -f "$APPNAME"
-  docker pull konradkleine/docker-registry-frontend:v2
+  sudo docker rm -f "$APPNAME"
+  sudo docker pull "$DOCKER_HUB_URL"
+  sudo docker restart "$APPNAME"
 else
-  docker run --name "$APPNAME" \
+  sudo docker run --name "$APPNAME" \
     -d --restart=always \
     -e ENV_DOCKER_REGISTRY_HOST=localhost \
     -e ENV_DOCKER_REGISTRY_PORT=5000 \
@@ -24,5 +27,5 @@ else
     -v /etc/ssl/CA/CasjaysDev/private/localhost.key:/etc/apache2/server.key:ro \
     -p 7080:80 \
     -p 7081:443 \
-    konradkleine/docker-registry-frontend:v2
+    "$DOCKER_HUB_URL"
 fi
